@@ -5,12 +5,12 @@ import { configDotenv } from "dotenv";
 configDotenv()
 
 const instance = new PushNotifier.default({
-	api_token: env.PUSH_NOTIFICATION_SERVICE_TOKEN,
-	package: env.PUSH_NOTIFICATION_PACKAGE_NAME,
+	api_token: process.env.PUSH_NOTIFICATION_SERVICE_TOKEN,
+	package: process.env.PUSH_NOTIFICATION_PACKAGE_NAME,
 });
 
-const username = env.PUSH_NOTIFICATION_USERNAME;
-const password = env.PUSH_NOTIFICATION_PASSWORD;
+const username = process.env.PUSH_NOTIFICATION_USERNAME;
+const password = process.env.PUSH_NOTIFICATION_PASSWORD;
 
 new Wsmt({port: 1234, password: process.env.SERVER_PASSWORD, callback: (name) => {
     const message = `${name} went offline!`

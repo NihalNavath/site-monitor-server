@@ -12,11 +12,13 @@ const instance = new PushNotifier.default({
 
 const username = process.env.PUSH_NOTIFICATION_USERNAME;
 const password = process.env.PUSH_NOTIFICATION_PASSWORD;
+
+const wsmtPassword = process.env.WSMT_PASSWORD
 const DISCORD_WEBHOOK_URL = process.env.DISCORD_WEBHOOK_URL
 
 const wsmt = new Wsmt({
 	port: 7621,
-	password: 'areallysecruwskdnlkasnfkii^#$#$%^T%$%$^%%',
+	password: wsmtPassword,
 	webServerOptions: {
 		enabled: true,
 		port: 1010

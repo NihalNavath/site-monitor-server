@@ -1,6 +1,7 @@
-import {Wsmt} from "website-monitor-tool"
+import { Wsmt } from "website-monitor-tool"
 import PushNotifier from "node-pushnotifier";
 import { configDotenv } from "dotenv";
+import axios from "axios"
 
 configDotenv()
 
@@ -11,11 +12,24 @@ const instance = new PushNotifier.default({
 
 const username = process.env.PUSH_NOTIFICATION_USERNAME;
 const password = process.env.PUSH_NOTIFICATION_PASSWORD;
+const DISCORD_WEBHOOK_URL = process.env.DISCORD_WEBHOOK_URL
 
-new Wsmt({port: 1234, password: process.env.SERVER_PASSWORD, callback: (name) => {
-    const message = `${name} went offline!`
-    sendNotificationToAllDevices(message)
-}})
+const wsmt = new Wsmt({
+	port: 7621,
+	password: 'areallysecruwskdnlkasnfkii^#$#$%^T%$%$^%%',
+	webServerOptions: {
+		enabled: true,
+		port: 1010
+	},
+	callback: (name) => {
+		const message = `${name} just went down!`
+		sendNotificationToAllDevices(message)
+	}
+});
+wsmt.init();
+
+console.log('Mothership listening on port 7621');
+
 
 const sendNotificationToAllDevices = (message) => {
 	instance
@@ -26,11 +40,33 @@ const sendNotificationToAllDevices = (message) => {
 
 			// iterate through devices
 			instance.getDevices().then((devices) => {
-                //sends a text message to all the devices registered
+				//sends a text message to all the devices registered
 				instance.sendText(devices, message);
 			});
 		})
 		.catch((error) => {
 			console.log(error);
 		});
+
+	const embed = {
+		title: message,
+		color: 0x3498db,
+		timestamp: new Date(),
+		footer: {
+			text: "Powered by WSMT",
+		},
+	};
+
+	axios
+		.post(DISCORD_WEBHOOK_URL, {
+			content: "<@&658929823111970816>",
+			embeds: [embed],
+		})
+		.then(() => {
+			console.log('%cMessage successfully sent to Discord webhook! 🎉', 'color: green; font-weight: bold;');
+		})
+		.catch((err) => {
+			console.error('%cDiscord webhook failed 😞:', 'color: red; font-weight: bold;', err);
+		});
+
 };
